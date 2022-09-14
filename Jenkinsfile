@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    #environment {
-    #    SECRET_FILE_ID = credentials('gehc-creds')
-    #}
+    //environment {
+    //    SECRET_FILE_ID = credentials('gehc-creds')
+    //}
     stages {
         stage('Hello') {
             steps {
