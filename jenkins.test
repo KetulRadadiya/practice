@@ -1,1 +1,1 @@
-env.DEPLOY_URL = "https://dev-example.com"
+env.DEPLOY_URL = "https://prod-example.com"
