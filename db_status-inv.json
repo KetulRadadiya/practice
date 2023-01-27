@@ -1,39 +1,5 @@
-{
-  "version": "1.0",
-  "timestamp": "2023-01-12T21:17:53.911Z",
-  "requestContext": {
-    "requestId": "25a97e46-1cca-4187-8879-1745287db795",
-    "functionArn": "arn:aws:lambda:us-east-1:123456789:function:Prod-DB-login-API:$LATEST",
-    "condition": "RetriesExhausted",
-    "approximateInvokeCount": 3
-  },
-  "requestPayload": {
-    "version": "0",
-    "id": "7cd93169-c71c-3324-0152-5b892dea272d",
-    "detail-type": "Scheduled Event",
-    "source": "aws.events",
-    "account": "123456789",
-    "time": "2023-01-12T21:14:17Z",
-    "region": "us-east-1",
-    "resources": [
-      "arn:aws:events:us-east-1:123456789:rule/Prod-DB-login-API-lambda-trigger"
-    ],
-    "detail": {}
-  },
-  "responseContext": {
-    "statusCode": 200,
-    "executedVersion": "$LATEST",
-    "functionError": "Unhandled"
-  },
-  "responsePayload": {
-    "errorMessage": "Expecting value: line 1 column 1 (char 0)",
-    "errorType": "JSONDecodeError",
-    "stackTrace": [
-      "  File \"/var/task/lambda_function.py\", line 8, in lambda_handler\n    lb_status = status_check(lb_url)\n",
-      "  File \"/var/task/lambda_function.py\", line 35, in status_check\n    print(json.loads(response.text))\n",
-      "  File \"/var/lang/lib/python3.7/json/__init__.py\", line 348, in loads\n    return _default_decoder.decode(s)\n",
-      "  File \"/var/lang/lib/python3.7/json/decoder.py\", line 337, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n",
-      "  File \"/var/lang/lib/python3.7/json/decoder.py\", line 355, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\n"
-    ]
-  }
-}
+File \"/var/task/lambda_function.py\", line 8, in lambda_handler\n    lb_status = status_check(lb_url)\n",
+File \"/var/task/lambda_function.py\", line 35, in status_check\n    print(json.loads(response.text))\n",
+File \"/var/lang/lib/python3.7/json/__init__.py\", line 348, in loads\n    return _default_decoder.decode(s)\n",
+File \"/var/lang/lib/python3.7/json/decoder.py\", line 337, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n",
+File \"/var/lang/lib/python3.7/json/decoder.py\", line 355, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, erralue) from None\n"
