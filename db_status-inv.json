@@ -1,5 +1,1 @@
-File \"/var/task/lambda_function.py\", line 8, in lambda_handler\n    lb_status = status_check(lb_url)\n",
-File \"/var/task/lambda_function.py\", line 35, in status_check\n    print(json.loads(response.text))\n",
-File \"/var/lang/lib/python3.7/json/__init__.py\", line 348, in loads\n    return _default_decoder.decode(s)\n",
-File \"/var/lang/lib/python3.7/json/decoder.py\", line 337, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n",
-File \"/var/lang/lib/python3.7/json/decoder.py\", line 355, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, erralue) from None\n"
+sfkldjilfilwrhefilwhefujfhwehfjkvjhkchsvadmghcfgb
