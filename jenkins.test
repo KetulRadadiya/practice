@@ -1,1 +1,65 @@
-env.DEPLOY_URL = "https://prod-example.com"
+# Initialize disk with GPT partition style
+
+Initialize-Disk -Number 1 -PartitionStyle GPT
+
+
+
+# Create partition and assign drive letter
+
+New-Partition -DiskNumber 1 -UseMaximumSize -AssignDriveLetter
+
+
+
+# Format partition with NTFS file system and give it a label
+
+Format-Volume -DriveLetter E -FileSystem NTFS -NewFileSystemLabel "Data"
+
+
+
+
+
+# Initialize disk with GPT partition style, create partition, and format volume
+
+Initialize-Disk -Number 1 -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize -DriveLetter E -AssignDriveLetter -PassThru | Format-Volume -FileSystem NTFS -NewFileSystemLabel "Data" -Confirm:$false
+
+
+
+# Get all disks
+
+$disks = Get-Disk
+
+
+
+# Loop through each disk
+
+foreach ($disk in $disks) {
+
+
+
+    # Get all partitions for the disk
+
+    $partitions = Get-Partition -DiskNumber $disk.Number
+
+
+
+    # Loop through each partition
+
+    foreach ($partition in $partitions) {
+
+
+
+        # Check if the partition style is RAW
+
+        if ($partition.PartitionStyle -eq "RAW") {
+
+
+
+            # Display the disk number
+
+            Write-Host "Disk number with RAW partition style: $($disk.Number)"
+
+        }
+
+    }
+
+}
