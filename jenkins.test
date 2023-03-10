@@ -1,65 +1,11 @@
-# Initialize disk with GPT partition style
-
-Initialize-Disk -Number 1 -PartitionStyle GPT
+#Get-Disk | where PartitionStyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "MYDATA"
 
 
 
-# Create partition and assign drive letter
+$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "D:"'
 
-New-Partition -DiskNumber 1 -UseMaximumSize -AssignDriveLetter
+#$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
 
+$DVD_Drive.DriveLetter = "L:" # assign new letter you want
 
-
-# Format partition with NTFS file system and give it a label
-
-Format-Volume -DriveLetter E -FileSystem NTFS -NewFileSystemLabel "Data"
-
-
-
-
-
-# Initialize disk with GPT partition style, create partition, and format volume
-
-Initialize-Disk -Number 1 -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize -DriveLetter E -AssignDriveLetter -PassThru | Format-Volume -FileSystem NTFS -NewFileSystemLabel "Data" -Confirm:$false
-
-
-
-# Get all disks
-
-$disks = Get-Disk
-
-
-
-# Loop through each disk
-
-foreach ($disk in $disks) {
-
-
-
-    # Get all partitions for the disk
-
-    $partitions = Get-Partition -DiskNumber $disk.Number
-
-
-
-    # Loop through each partition
-
-    foreach ($partition in $partitions) {
-
-
-
-        # Check if the partition style is RAW
-
-        if ($partition.PartitionStyle -eq "RAW") {
-
-
-
-            # Display the disk number
-
-            Write-Host "Disk number with RAW partition style: $($disk.Number)"
-
-        }
-
-    }
-
-}
+$DVD_Drive.Put()
