@@ -3,9 +3,6 @@
 
 
 $DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "D:"'
-
 #$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
-
 $DVD_Drive.DriveLetter = "L:" # assign new letter you want
-
 $DVD_Drive.Put()
