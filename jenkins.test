@@ -2,9 +2,10 @@
 
 
 
-$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "A:"'
-$DVD_Drive.DriveLetter = "E:"                                              # assign new letter you want
+# $DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "A:"'
+$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
+$DVD_Drive.DriveLetter = "E:"
 $DVD_Drive.Put()
 
 
-#$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
+#
