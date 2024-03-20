@@ -6,6 +6,3 @@
 $DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
 $DVD_Drive.DriveLetter = "E:"
 $DVD_Drive.Put()
-
-
-#
