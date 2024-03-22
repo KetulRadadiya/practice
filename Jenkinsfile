@@ -1,19 +1,21 @@
+@Library("shared-lib") _ 
 pipeline {
-    agent any
-    //environment {
-    //    SECRET_FILE_ID = credentials('gehc-creds')
-    //}
+    agent { label 'docker' }
+    options { timestamps() }
+    environment {
+        GIT_CRED        = credentials('Github-Read')
+        PYPI            = credentials('pypi-admin-creds')
+        SECRET_FILE     = credentials('version-file')
+    }
     stages {
-        stage('Hello') {
+        stage('Build an Updated Tag') {
             steps {
-                echo 'Starting......'
                 script {
-                    load "jenkins.env"
-                    echo "from grovvy : ${env.DEPLOY_BASE_URL}"
-                    sh """
-                        #!/usr/bin/env bash
-                        echo "from Shell : ${DEPLOY_BASE_URL}"
-                    """
+                    semanticVersionAi{
+                        GIT_CRED_PSW = GIT_CRED_PSW
+                        PYPI_USR     = PYPI_USR
+                        PYPI_PSW     = PYPI_PSW
+                    }
                 }
             }
         }
