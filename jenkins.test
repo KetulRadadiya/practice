@@ -1,5 +1,6 @@
 #Get-Disk | where PartitionStyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "MYDATA"
 
+....
 
 
 # $DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "A:"'
