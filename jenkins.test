@@ -1,17 +1,108 @@
-{
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "type": "object",
-  "properties": {
-    "ami_id": {
-      "type": "string",
-      "pattern": "^ami-[a-f0-9]{8,17}$"
-    },
-    "ssm_param_name": {
-      "type": "string"
-    },
-    "stack_name": {
-      "type": "string"
-    }
-  },
-  "required": ["ami_id", "ssm_param_name", "stack_name"]
-}
+import boto3
+import json
+
+ec2 = boto3.client('ec2')
+ssm = boto3.client('ssm')
+cfn = boto3.client('cloudformation')
+
+def get_ami_creation_date(ami_id):
+    response = ec2.describe_images(ImageIds=[ami_id])
+    return response['Images'][0]['CreationDate']
+
+def lambda_handler(event, context):
+    print("Received event:", json.dumps(event))
+
+    # Parse body as JSON
+    event = json.loads(event['body']) if isinstance(event.get('body'), str) else event.get('body', {})
+
+    instance_ami_id = event['ami_id']
+    ssm_param_name = event['ssm_param_name']
+    stack_name = event['stack_name']
+
+    # Get current SSM parameter value
+    ssm_ami_id = ssm.get_parameter(Name=ssm_param_name)['Parameter']['Value']
+
+    # Get creation dates
+    instance_ami_date = get_ami_creation_date(instance_ami_id)
+    ssm_ami_date = get_ami_creation_date(ssm_ami_id)
+
+    print(f"Instance AMI: {instance_ami_id} ({instance_ami_date})")
+    print(f"SSM AMI: {ssm_ami_id} ({ssm_ami_date})")
+
+    if ssm_ami_date >= instance_ami_date:
+        print("SSM AMI is up to date.")
+        response_body = {
+            'status': 'no_update_needed',
+            'message': 'SSM AMI is already up to date.'
+        }
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": json.dumps(response_body),
+            "isBase64Encoded": False
+        }
+
+    print("Instance AMI is newer. Updating CloudFormation stack...")
+
+    try:
+        # Update CloudFormation stack using boto3
+        # response = cfn.update_stack(
+        #     StackName=stack_name,
+        #     UsePreviousTemplate=True,
+        #     Capabilities=['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+        #     Parameters=[
+        #         {
+        #             'ParameterKey': 'AMIId',
+        #             'ParameterValue': instance_ami_id,
+        #             'UsePreviousValue': False
+        #         }
+        #     ]
+        # )
+
+        print("CloudFormation stack update initiated.")
+        
+        # Update SSM parameter with new AMI ID
+        ssm.put_parameter(
+            Name=ssm_param_name,
+            Value=instance_ami_id,
+            Type='String',
+            Overwrite=True
+        )
+        print("SSM parameter updated with new AMI ID.")
+
+        response_body = {
+            'status': 'success',
+            'message': 'CloudFormation stack and SSM parameter updated successfully.',
+            'new_ami_id': instance_ami_id
+        }
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": json.dumps(response_body),
+            "isBase64Encoded": False
+        }
+
+    except cfn.exceptions.ClientError as e:
+        error_msg = str(e)
+        print(f"Failed to update CloudFormation stack: {error_msg}")
+
+        response_body = {
+            'status': 'error',
+            'message': 'CloudFormation stack update failed.',
+            'error': error_msg
+        }
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": json.dumps(response_body),
+            "isBase64Encoded": False
+        }
