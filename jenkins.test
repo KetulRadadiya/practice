@@ -1,8 +1,17 @@
-#Get-Disk | where PartitionStyle -eq 'raw' | Initialize-Disk -PartitionStyle GPT -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "MYDATA"
-
-
-
-# $DVD_Drive = Get-WmiObject win32_volume -filter 'DriveLetter = "A:"'
-$DVD_Drive = Get-WmiObject win32_volume -filter 'DriveType = "5"'
-$DVD_Drive.DriveLetter = "E:"
-$DVD_Drive.Put()
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "ami_id": {
+      "type": "string",
+      "pattern": "^ami-[a-f0-9]{8,17}$"
+    },
+    "ssm_param_name": {
+      "type": "string"
+    },
+    "stack_name": {
+      "type": "string"
+    }
+  },
+  "required": ["ami_id", "ssm_param_name", "stack_name"]
+}
